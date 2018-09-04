@@ -50,8 +50,6 @@ if [ "x$DISTRO" == "xrhel" ]; then
 	cp /etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release $RPM_REPO_DIR
 fi
 
-yum $YUMROOTOPTS --releasever=$RELEASEVER --downloaddir=$RPM_REPO_DIR -y install $DISTRO-release
-
 curl -LOJf $RPM_EPEL_KEY
 curl -LOJf $MY_SQL_REPO_KEY
 curl -LOJf $CLOUDERA_MANAGER_REPO_KEY
@@ -62,10 +60,17 @@ curl -LOJf $AMBARI_REPO_KEY
 # import repo keys
 rpm $RPMROOTOPTS --import *
 
+
+yum clean all
+yum $YUMROOTOPTS clean all
+
+yum --nogpg $YUMROOTOPTS --releasever=$RELEASEVER install -y $DISTRO-release --downloadonly --downloaddir=$RPM_REPO_DIR 
+yum --nogpg $YUMROOTOPTS --releasever=$RELEASEVER install -y $DISTRO-release
+
 if [[ -n "$YUM_ROOT" ]]; then
     cp /etc/yum.repos.d/* $YUM_ROOT/etc/yum.repos.d/
 fi
 
-yum --setopt=protected_multilib=false $YUMROOTOPTS --releasever=$RELEASEVER --downloadonly --downloaddir=$RPM_REPO_DIR -y install $RPM_PACKAGE_LIST
+yum --setopt=protected_multilib=false $YUMROOTOPTS --releasever=$RELEASEVER --downloadonly --downloaddir=$RPM_REPO_DIR install -y $RPM_PACKAGE_LIST
 
 createrepo --database $RPM_REPO_DIR
