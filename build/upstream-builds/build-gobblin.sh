@@ -91,6 +91,7 @@ fi
 cat >> gobblin-distribution/gobblin-flavor-pnda.gradle << EOF
 dependencies {
   compile project(':gobblin-modules:gobblin-kafka-08')
+  compile project(':gobblin-modules:gobblin-crypto-provider')
 }
 EOF
 

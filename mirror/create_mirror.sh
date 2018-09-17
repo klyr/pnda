@@ -31,9 +31,6 @@ if [ "x$DISTRO" == "xrhel" ]; then
 	esac
 fi
 
-$MIRROR_BUILD_DIR/create_mirror_rpm.sh
-[[ $? -ne 0 ]] && mirror_error "Problem while creating os package mirror"
-
 $MIRROR_BUILD_DIR/create_mirror_misc.sh
 [[ $? -ne 0 ]] && mirror_error "Problem while creating misc package mirror"
 
