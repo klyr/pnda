@@ -60,17 +60,18 @@ curl -LOJf $AMBARI_REPO_KEY
 # import repo keys
 rpm $RPMROOTOPTS --import *
 
-
 yum clean all
 yum $YUMROOTOPTS clean all
 
-yum --nogpg $YUMROOTOPTS --releasever=$RELEASEVER install -y $DISTRO-release --downloadonly --downloaddir=$RPM_REPO_DIR 
-yum --nogpg $YUMROOTOPTS --releasever=$RELEASEVER install -y $DISTRO-release
+yum --disablerepo=updates --nogpg $YUMROOTOPTS --releasever=$RELEASEVER install -y $DISTRO-release --downloadonly --downloaddir=$RPM_REPO_DIR
+yum                       --nogpg $YUMROOTOPTS --releasever=$RELEASEVER install -y $DISTRO-release --downloadonly --downloaddir=$RPM_REPO_DIR
+yum --disablerepo=updates --nogpg $YUMROOTOPTS --releasever=$RELEASEVER install -y $DISTRO-release
 
 if [[ -n "$YUM_ROOT" ]]; then
     cp /etc/yum.repos.d/* $YUM_ROOT/etc/yum.repos.d/
 fi
 
-yum --setopt=protected_multilib=false $YUMROOTOPTS --releasever=$RELEASEVER --downloadonly --downloaddir=$RPM_REPO_DIR install -y $RPM_PACKAGE_LIST
+yum --disablerepo=updates --setopt=protected_multilib=false $YUMROOTOPTS --releasever=$RELEASEVER --downloadonly --downloaddir=$RPM_REPO_DIR install -y cloud-init $RPM_PACKAGE_LIST
 
 createrepo --database $RPM_REPO_DIR
+
